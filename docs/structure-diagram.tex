@@ -1,0 +1,67 @@
+\documentclass[tikz, crop]{standalone}
+
+\usetikzlibrary{decorations.pathreplacing}
+
+\RequirePackage[]{helvet}
+\fontfamily{phv}\selectfont
+\renewcommand{\familydefault}{\sfdefault}
+\fontsize{20}{24}\selectfont%
+
+\tikzset{
+	varbrace/.style={%
+		line width=.25pt,
+		decorate,
+		decoration={%
+			brace,
+			amplitude=2.5pt,
+			#1%
+		},
+	},
+	varbrace/.default={},
+	varbrace text/.style={%
+		black,
+		midway,
+		font=\tiny,
+		scale=.5,
+		yshift=#1%
+	}
+}
+
+\begin{document}
+	
+	\begin{tikzpicture}[
+		remember picture,
+		brace/.style args={up}{%
+			decorate,decoration={brace,amplitude=4pt,mirror}%
+		},
+		brace/.style args={down}{%
+			decorate,decoration={brace,amplitude=4pt}%
+		},
+	]
+		\node[] (postcode) {%
+			\begin{tikzpicture}[remember picture]
+				\foreach \alphanumchar [count=\charindex] in {N,P,1,0,\space,8,X,G} {
+					\pgfmathsetmacro{\charshift}{5*\charindex}
+					\node[xshift=\charshift mm] (\alphanumchar) {\alphanumchar};
+				}
+			\end{tikzpicture}
+		};
+	%
+		\foreach \startpoint/\endpoint/\bracetext/\braceshift/\textshift/\orientation in {
+			N/0/OUTCODE/0pt/12.5pt/,
+			8/G/INCODE/0pt/12.5pt/,
+			X/G/UNIT/-15pt/-12.5pt/mirror,
+			N/8/SECTOR/-15pt/-12.5pt/mirror,
+			N/0/SUBDISTRICT/-25pt/-12.5pt/mirror,
+			N/1/DISTRICT/-35pt/-12.5pt/mirror,
+			N/P/AREA/-45pt/-12.5pt/mirror%
+		}{
+			\draw[varbrace=\orientation]
+				([yshift=\braceshift]\startpoint.north west)%
+				--%
+				([yshift=\braceshift]\endpoint.north east)%
+				node [varbrace text=\textshift] {\bracetext};
+		}
+	\end{tikzpicture}
+	
+\end{document}
