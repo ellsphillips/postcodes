@@ -17,3 +17,9 @@ class Component(Enum):
 class Postcode:
 
     postcode: str
+
+    def __post_init__(self) -> None:
+        self._parse()
+
+    def _parse(self) -> None:
+        self.postcode = self.postcode.replace(" ", "").upper()
