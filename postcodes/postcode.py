@@ -15,4 +15,5 @@ class Component(Enum):
 
 @dataclass
 class Postcode:
-    ...
+
+    postcode: str
