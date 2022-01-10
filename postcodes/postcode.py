@@ -31,3 +31,15 @@ class Postcode:
 
     def _parse(self) -> None:
         self.postcode = self.postcode.replace(" ", "").upper()
+
+    def explode(self):
+        comps = [component.name for component in list(Component)]
+
+        parts = list(
+            re.findall(
+                r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
+                self.postcode,
+            )
+        )
+
+        return zip(comps, *parts)
