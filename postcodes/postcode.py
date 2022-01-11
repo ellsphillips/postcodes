@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 from enum import Enum, auto
+from typing import Dict
 
 from .patterns import UK_PATTERNS
 
@@ -38,3 +39,25 @@ class Postcode:
             r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
             self.postcode,
         )[0]
+
+    @property
+    def components(self) -> Dict[str, str]:
+        components = [component.name for component in list(Component)]
+        explosion = self.explode()
+
+        shrapnel = [
+            explosion[0],
+            explosion[1],
+            explosion[2],
+            "".join([s for s in explosion[3] if s.isdigit()]),
+            "".join(
+                [s for s in explosion[3]]
+                if any(s.isalpha() for s in explosion[3])
+                else "N/A"
+            ),
+            explosion[4],
+            explosion[5],
+            explosion[6],
+        ]
+
+        return {k: v for k, v in zip(components, shrapnel)}
