@@ -1,4 +1,4 @@
-\documentclass[tikz, crop]{standalone}
+\documentclass[tikz, crop, xcolor]{standalone}
 
 \usetikzlibrary{decorations.pathreplacing}
 
@@ -6,6 +6,12 @@
 \fontfamily{phv}\selectfont
 \renewcommand{\familydefault}{\sfdefault}
 \fontsize{20}{24}\selectfont%
+
+\definecolor{mk-orange}{RGB}{243, 150, 105}
+\definecolor{mk-yellow}{RGB}{255, 216, 102}
+
+\newlength{\vblabeloffset}
+\setlength{\vblabeloffset}{12.5pt}
 
 \tikzset{
 	varbrace/.style={%
@@ -21,7 +27,7 @@
 	varbrace text/.style={%
 		black,
 		midway,
-		font=\tiny,
+		font=\tiny\bfseries,
 		scale=.5,
 		yshift=#1%
 	}
@@ -29,38 +35,30 @@
 
 \begin{document}
 	
-	\begin{tikzpicture}[
-		remember picture,
-		brace/.style args={up}{%
-			decorate,decoration={brace,amplitude=4pt,mirror}%
-		},
-		brace/.style args={down}{%
-			decorate,decoration={brace,amplitude=4pt}%
-		},
-	]
+	\begin{tikzpicture}[remember picture]
 		\node[] (postcode) {%
 			\begin{tikzpicture}[remember picture]
 				\foreach \alphanumchar [count=\charindex] in {N,P,1,0,\space,8,X,G} {
 					\pgfmathsetmacro{\charshift}{5*\charindex}
-					\node[xshift=\charshift mm] (\alphanumchar) {\alphanumchar};
+					\node[xshift=\charshift mm] (\alphanumchar) {\color{mk-yellow}\alphanumchar};
 				}
 			\end{tikzpicture}
 		};
 	%
 		\foreach \startpoint/\endpoint/\bracetext/\braceshift/\textshift/\orientation in {
-			N/0/OUTCODE/0pt/12.5pt/,
-			8/G/INCODE/0pt/12.5pt/,
-			X/G/UNIT/-15pt/-12.5pt/mirror,
-			N/8/SECTOR/-15pt/-12.5pt/mirror,
-			N/0/SUBDISTRICT/-25pt/-12.5pt/mirror,
-			N/1/DISTRICT/-35pt/-12.5pt/mirror,
-			N/P/AREA/-45pt/-12.5pt/mirror%
+			N/0/OUTCODE/0pt/\vblabeloffset/,
+			8/G/INCODE/0pt/\vblabeloffset/,
+			X/G/UNIT/-15pt/-\vblabeloffset/mirror,
+			N/8/SECTOR/-15pt/-\vblabeloffset/mirror,
+			N/0/SUBDISTRICT/-25pt/-\vblabeloffset/mirror,
+			N/1/DISTRICT/-35pt/-\vblabeloffset/mirror,
+			N/P/AREA/-45pt/-\vblabeloffset/mirror%
 		}{
 			\draw[varbrace=\orientation]
 				([yshift=\braceshift]\startpoint.north west)%
 				--%
 				([yshift=\braceshift]\endpoint.north east)%
-				node [varbrace text=\textshift] {\bracetext};
+				node [varbrace text=\textshift] {\color{mk-orange}\bracetext};
 		}
 	\end{tikzpicture}
 	
