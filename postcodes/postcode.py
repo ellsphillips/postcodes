@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Dict
+from typing import Dict, List
 
 from .patterns import UK_PATTERNS
 
@@ -34,7 +34,7 @@ class Postcode:
         pc = self.postcode.replace(" ", "").upper()
         self.postcode = " ".join([pc[:-3], pc[-3:]])
 
-    def explode(self):
+    def explode(self) -> List[str]:
         return re.findall(
             r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
             self.postcode,
