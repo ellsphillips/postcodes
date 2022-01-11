@@ -1,3 +1,4 @@
+import json
 import os
 
 from postcodes import Postcode
@@ -14,9 +15,7 @@ PATTERNS = [
 
 def main() -> None:
 
-    register = {code: Postcode(code) for code in PATTERNS}
-
-    print(*[pc.is_valid for pc in register.values()], sep="\n")
+    print(json.dumps(Postcode(PATTERNS[0]).components, indent=4))
 
 
 if __name__ == "__main__":
