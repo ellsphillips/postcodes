@@ -60,4 +60,4 @@ class Postcode:
             explosion[6],
         ]
 
-        return {k: v for k, v in zip(components, shrapnel)}
+        return dict(zip(components, shrapnel))
