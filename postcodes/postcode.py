@@ -31,8 +31,8 @@ class Postcode:
         return bool(re.match(pattern, self.postcode))
 
     def _parse(self) -> None:
-        pc = self.postcode.replace(" ", "").upper()
-        self.postcode = " ".join([pc[:-3], pc[-3:]])
+        _postcode = self.postcode.replace(" ", "").upper()
+        self.postcode = " ".join([_postcode[:-3], _postcode[-3:]])
 
     def explode(self) -> List[str]:
         return re.findall(
