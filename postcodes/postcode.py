@@ -6,6 +6,11 @@ from typing import Dict, List
 from .patterns import UK_PATTERNS
 
 
+class InvalidPostcodeError(Exception):
+    def __init__(self):
+        Exception.__init__(self, "The postcode provided is invalid.")
+
+
 class Component(Enum):
     COMPLETE = auto()
     OUTWARD = auto()
@@ -35,6 +40,9 @@ class Postcode:
         self.postcode = " ".join([_postcode[:-3], _postcode[-3:]])
 
     def explode(self) -> List[str]:
+        if not self.is_valid:
+            raise InvalidPostcodeError()
+
         return re.findall(
             r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
             self.postcode,
