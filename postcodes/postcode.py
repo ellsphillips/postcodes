@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 from enum import Enum, auto
+from typing import Dict, List
 
 from .patterns import UK_PATTERNS
 
@@ -30,16 +31,33 @@ class Postcode:
         return bool(re.match(pattern, self.postcode))
 
     def _parse(self) -> None:
-        self.postcode = self.postcode.replace(" ", "").upper()
+        pc = self.postcode.replace(" ", "").upper()
+        self.postcode = " ".join([pc[:-3], pc[-3:]])
 
-    def explode(self):
-        comps = [component.name for component in list(Component)]
+    def explode(self) -> List[str]:
+        return re.findall(
+            r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
+            self.postcode,
+        )[0]
 
-        parts = list(
-            re.findall(
-                r"^((([A-Z][A-Z]{0,1})([0-9][A-Z0-9]{0,2})) {0,}(([0-9])([A-Z]{2})))",
-                self.postcode,
-            )
-        )
+    @property
+    def components(self) -> Dict[str, str]:
+        components = [component.name for component in list(Component)]
+        explosion = self.explode()
 
-        return zip(comps, *parts)
+        shrapnel = [
+            explosion[0],
+            explosion[1],
+            explosion[2],
+            "".join([s for s in explosion[3] if s.isdigit()]),
+            "".join(
+                [s for s in explosion[3]]
+                if any(s.isalpha() for s in explosion[3])
+                else "N/A"
+            ),
+            explosion[4],
+            explosion[5],
+            explosion[6],
+        ]
+
+        return {k: v for k, v in zip(components, shrapnel)}
