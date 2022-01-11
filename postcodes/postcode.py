@@ -30,7 +30,8 @@ class Postcode:
         return bool(re.match(pattern, self.postcode))
 
     def _parse(self) -> None:
-        self.postcode = self.postcode.replace(" ", "").upper()
+        pc = self.postcode.replace(" ", "").upper()
+        self.postcode = " ".join([pc[:-3], pc[-3:]])
 
     def explode(self):
         comps = [component.name for component in list(Component)]
