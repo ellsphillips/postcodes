@@ -1,21 +1,24 @@
 import json
 import os
 
-from postcodes import Postcode
+import postcodes as pc
 
 PATTERNS = [
-    "AA9a9aa",
-    "B9b9bb",
-    "C99cc",
-    "D999dd",
-    "EE99ee",
-    "FF999ff",
+    "AA9a 9aa",
+    "B9b 9bb",
+    "C9 9cc",
+    "D99 9dd",
+    "EE9 9ee",
+    "FF99 9ff",
 ]
 
 
 def main() -> None:
 
-    print(json.dumps(Postcode(PATTERNS[0]).components, indent=4))
+    print(
+        *[json.dumps(pc.Postcode(p).components, indent=4) for p in PATTERNS],
+        sep="\n",
+    )
 
 
 if __name__ == "__main__":

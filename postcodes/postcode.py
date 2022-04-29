@@ -51,21 +51,11 @@ class Postcode:
     @property
     def components(self) -> Dict[str, str]:
         components = [component.name for component in list(Component)]
-        explosion = self.explode()
+        *(c, o, a, *d), i, s, u = self.explode()  # pylint: disable=invalid-name
 
-        shrapnel = [
-            explosion[0],
-            explosion[1],
-            explosion[2],
-            "".join([s for s in explosion[3] if s.isdigit()]),
-            "".join(
-                [s for s in explosion[3]]
-                if any(s.isalpha() for s in explosion[3])
-                else "N/A"
-            ),
-            explosion[4],
-            explosion[5],
-            explosion[6],
+        district_detail = [
+            "".join([s for s in d[0] if s.isdigit()]),
+            "".join([s for s in d[0]] if any(s.isalpha() for s in d[0]) else "N/A"),
         ]
 
-        return dict(zip(components, shrapnel))
+        return dict(zip(components, [c, o, a, *district_detail, i, s, u]))
